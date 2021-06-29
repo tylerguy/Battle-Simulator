@@ -12,6 +12,7 @@ int gamestarted = 0;
 
 int invalidinput = 0;
 std::string gamestate;
+std::string enemy;
 
 //player variables;
 int playerchancemodifier;
@@ -25,16 +26,16 @@ int playerdodgeused = 0;
 int playermove = 0;
 int playerhealthincrease = 0;
 
-//enemy variables;
-int enemychancemodifier;
-int enemychancehit = 0;
-int enemyhealused = 0;
-int enemyrechargerate = 1;
-int enemyhealth = 100;
-int enemyenergy = 100;
-int enemydodgeused = 0;
-int enemymove = 0;
-int enemyhealthincrease = 0;
+// enemy variables;
+ int enemychancemodifier;
+ int enemychancehit = 0;
+ int enemyhealused = 0;
+ int enemyrechargerate = 1;
+ int enemyhealth = 100;
+ int enemyenergy = 100;
+ int enemydodgeused = 0;
+ int enemymove = 0;
+ int enemyhealthincrease = 0;
 
 int main()
 {
@@ -53,19 +54,12 @@ int main()
 		gamestarted = 1;
 		playerhealused = 1;
 		
+			enemychancemodifier = 0;
 		
-		
-		enemychancemodifier = 0;
-		
-		//player turn
+//player move
+//player attack
 
-
-		//player attack
-
-		
-		
-
-		if (playermove == 1) {
+        if (playermove == 1) {
 
 			if (enemydodgeused = 1) {
 				playerchancemodifier = -30;
@@ -114,7 +108,6 @@ int main()
 					std::cout << "You successfully attacked" << std::endl;
 					enemyhealth -= ((rand() % 100) + 1);
 					playerenergy -= 50;
-					if (playerenergy == 0);
 				}
 			}
 
@@ -127,7 +120,7 @@ int main()
 			if (playerenergy == 0)
 			{
 				std::cout << "You don't have enough energy to do this move" << std::endl;
-				std::cout << "pls choose another option" << std::endl;
+				std::cout << "Please choose another option" << std::endl;
 				std::cin >> playermove;
 			}
 
