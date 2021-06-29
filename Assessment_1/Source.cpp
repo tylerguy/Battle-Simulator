@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>    
-#include <time.h>      
+#include <time.h>
+#include<windows.h>
 
 
  //declare variables
@@ -36,6 +37,8 @@ int playerhealthincrease = 0;
  int enemydodgeused = 0;
  int enemymove = 0;
  int enemyhealthincrease = 0;
+ int enemymaxenergy = 100;
+ int enemymaxhealth = 100;
 
 int main()
 {
@@ -48,33 +51,35 @@ int main()
 		std::cout << "4) Recharge \n";
 		std::cout << "5) Dodge \n";
 		std::cout << "" << std::endl;
+		Sleep(500);
 
 		std::cout << "Take your move: \n";
 		std::cin >> playermove;
 		gamestarted = 1;
 		playerhealused = 1;
 		
-			enemychancemodifier = 0;
+		enemychancemodifier = 0;
 		
 //player move
 //player attack
 
-        if (playermove == 1) {
+		if (playermove == 1) {
 
-			if (enemydodgeused = 1) {
+			if (enemydodgeused = 1) 
+			{
+			
 				playerchancemodifier = -30;
 
-
 			}
-			
-			playerattackchancehit = ((rand() % 100) + 1) + playerchancemodifier;
+
+			playerattackchancehit = (rand() % 100 + 1) + playerchancemodifier;
 
 			if (playerattackchancehit <= 80)
-
 			{
 
 				std::cout << "You successfully attacked" << std::endl;
-				enemyhealth -= ((rand() % 10) + 1);
+				enemyhealth -= (rand() % 10 + 1);
+				Sleep(200);
 
 			}
 
@@ -82,9 +87,11 @@ int main()
 			{
 
 				std::cout << "You Failed your turn" << std::endl;
+				Sleep(200);
 
 			}
 		}
+		
 
 		//end of player attack
 
@@ -101,13 +108,16 @@ int main()
 				{
 					std::cout << "You don't have enough energy to do this move" << std::endl;
 					std::cout << "pls choose another option" << std::endl;
+					Sleep(200);
 					std::cin >> playermove;
+
 				}
 				else
 				{
 					std::cout << "You successfully attacked" << std::endl;
 					enemyhealth -= ((rand() % 100) + 1);
 					playerenergy -= 50;
+					Sleep(200);
 				}
 			}
 
@@ -115,12 +125,14 @@ int main()
 			{
 
 				std::cout << "You Failed your turn" << std::endl;
+				Sleep(200);
 
 			}
 			if (playerenergy == 0)
 			{
 				std::cout << "You don't have enough energy to do this move" << std::endl;
 				std::cout << "Please choose another option" << std::endl;
+				Sleep(200);
 				std::cin >> playermove;
 			}
 
@@ -140,6 +152,7 @@ int main()
 
 				std::cout << "You have been healed!" << std::endl;
 				playerhealused = 1;
+				Sleep(200);
 			}
 
 			if (playerhealth > maxHealth)
@@ -152,6 +165,7 @@ int main()
 		else if (playerhealth == 100)
 		{
 			std::cout << "You're already at full health";
+			Sleep(200);
 		}
 
 		//end of player heal
@@ -174,125 +188,152 @@ int main()
 
 		//end of player dodge
 
-		else if (playermove != 1 or playermove != 2 or playermove != 3 or playermove != 4 or playermove != 5)
+		if (playermove != 1 xor playermove != 2 xor playermove != 3 xor playermove != 4 xor playermove != 5)
 
 		{
 
+			std::cout << std::endl;
 			std::cout << "Invalid Input..." << std::endl;
 			int invalidinput = 1;
-
+			Sleep(200);
 
 		}
-
 
 		//enemy logic
 
-		enemymove = ((rand() % 5) + 1);
-
-		//enemy attack
-
-		if (enemymove == 1) {
-
-			int hitchance = 80;
-			enemychancehit = ((rand() % 100) + 1) - enemychancemodifier;
-
-			if (enemychancehit <= 80)
-
+		if (enemyenergy <= enemymaxenergy - 50)
 			{
-
-				enemyhealth -= ((rand() % 10) + 1);
-
+				enemyrechargerate = 4;
 			}
 
+			else if (enemyhealth <= enemymaxhealth - 50)
+			{
+				if (enemyhealused = 1)
+				{
+					break;
+				}
+				else {
+
+					enemyhealthincrease = enemyenergy / 2;
+					enemyhealthincrease += enemyhealth;
+
+
+					enemyhealused = 1;
+				}
+
+				if (enemyhealth > maxHealth)
+				{
+					enemyhealth = maxHealth;
+				}
+			}
 			else
 			{
 
-
+				enemymove = (rand() % 5 + 1);
 
 			}
-		}
+			//enemy attack
 
-		//end of enemy attack
+			if (enemymove == 1) {
 
-		//enemy special attack
+				int hitchance = 80;
+				enemychancehit = ((rand() % 100) + 1) - enemychancemodifier;
 
-		else if (enemymove == 2)
-		{
+				if (enemychancehit <= 80)
 
-			int enemyhitchance = 50;
-			enemychancehit = ((rand() % 100) + 1) - enemychancemodifier;
+				{
 
-			if (enemychancehit <= 50)
+					enemyhealth -= ((rand() % 10) + 1);
+
+				}
+
+				else
+				{
+
+
+
+				}
+			}
+
+			//end of enemy attack
+
+			//enemy special attack
+
+			else if (enemymove == 2)
+			{
+
+				int enemyhitchance = 50;
+				enemychancehit = ((rand() % 100) + 1) - enemychancemodifier;
+
+				if (enemychancehit <= 50)
+				{
+
+
+					playerhealth -= ((rand() % 100) + 1);
+					enemyenergy -= 50;
+
+				}
+
+				else
+				{
+
+
+
+				}
+			}
+
+			//end of enemy special attack
+
+			else if (enemymove == 3) {
+
+				if (enemyhealused = 0)
+				{
+
+					enemyhealthincrease = enemyenergy / 2;
+					enemyhealthincrease += enemyhealth;
+
+
+					enemyhealused = 1;
+				}
+
+				if (enemyhealth > maxHealth)
+				{
+					enemyhealth = maxHealth;
+				}
+
+			}
+
+			else if (enemyhealth == 100)
 			{
 
 
-				playerhealth -= ((rand() % 100) + 1);
-				enemyenergy -= 50;
-
 			}
 
-			else
+
+			else if (playermove == 4)
+			{
+				enemyrechargerate = 4;
+			}
+
+			else if (playermove == 5)
 			{
 
-
-
-			}
-		}
-
-		//end of enemy special attack
-
-		else if (enemymove == 3) {
-
-			if (enemyhealused = 0)
-			{
-
-				enemyhealthincrease = enemyenergy / 2;
-				enemyhealthincrease += enemyhealth;
-
-
-				enemyhealused = 1;
+				enemyrechargerate = 0.5;
+				enemydodgeused = 1;
 			}
 
-			if (enemyhealth > maxHealth)
-			{
-				enemyhealth = maxHealth;
+			if (enemyenergy < 0) {
+				enemyenergy = maxEnergy;
 			}
-
-		}
-
-		else if (enemyhealth == 100)
-		{
-
-
-		}
-
-
-		else if (playermove == 4)
-		{
-			enemyrechargerate = 4;
-		}
-
-		else if (playermove == 5)
-		{
-			
-			enemyrechargerate = 0.5;
-			enemydodgeused = 1;
-		}
-
-		if (enemyenergy < 0) {
-			enemyenergy = maxEnergy;
-		}
-		if (enemyhealth < 0) {
-			enemyhealth = 0;
-		}
-		if (playerenergy < 0) {
-			playerenergy = maxEnergy;
-		}
-		if (playerhealth < 0) {
-			playerhealth = 0
-				;
-		}
-
+			if (enemyhealth < 0) {
+				enemyhealth = 0;
+			}
+			if (playerenergy < 0) {
+				playerenergy = maxEnergy;
+			}
+			if (playerhealth < 0) {
+				playerhealth = 0;
+			}
 
 		std::system("CLS");
 		std::cout << "Current Stats:" << std::endl;
@@ -300,6 +341,7 @@ int main()
 		std::cout << "Player Energy: " << playerenergy << std::endl;
 		std::cout << "Enemy Health: " << enemyhealth << std::endl;
 		std::cout << "Enemy Energy: " << enemyenergy << std::endl;
+		Sleep(500);
 
 		if (playerhealth == 0)
 		{
