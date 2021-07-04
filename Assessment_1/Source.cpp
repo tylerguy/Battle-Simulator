@@ -2,7 +2,8 @@
 #include <string>
 #include <stdlib.h>    
 #include <time.h>
-#include<windows.h>
+#include <windows.h>
+#include "List.h"
 
 
  //declare variables
@@ -40,8 +41,8 @@ int playermove;
 
 
  //attack variables
- int attackhitchance = 80;
- int sphitchance = 50;
+const int attackhitchance = 80;
+const int sphitchance = 50;
 
  int main() {
 	 do
