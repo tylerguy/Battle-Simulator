@@ -105,10 +105,22 @@ int main()
 		{
 			return 0;
 		}
-	}while (gamestarted == 0);
+	} while (gamestarted == 0);
 
 	do
 	{
+		playerenergy += (10 * playerrechargerate);
+		enemyenergy += (10 * enemyrechargerate);
+
+		if (playerenergy > maxEnergy)
+		{
+			playerenergy = maxEnergy;
+		}
+		if (enemyenergy > maxEnergy)
+		{
+			enemyenergy = maxEnergy;
+		}
+
 		std::system("CLS");
 		std::cout << "Current Stats:" << std::endl;
 		std::cout << "Player Health: " << playerhealth << std::endl;
@@ -130,28 +142,18 @@ int main()
 		std::cout << "Take your move: \n";
 		std::cin >> playermove;
 
-		playerenergy += (10 * playerrechargerate);
-		enemyenergy += (10 * enemyrechargerate);
 		playerrechargerate = 1;
 		enemyrechargerate = 1;
 		enemychancemodifier = 0;
 		playerchancemodifier = 0;
-		if (playerenergy > maxEnergy)
-		{
-			playerenergy = maxEnergy;
-		}
-		if (enemyenergy > maxEnergy)
-		{
-			enemyenergy = maxEnergy;
-		}
+
 		playerturn = 0;
 		enemyturn = 0;
 
 		//player move
 
-		
-		do {
-		
+		do
+		{
 			switch (playermove)
 			{
 			case 1:
@@ -201,23 +203,26 @@ int main()
 				if (playerhealth == 100)
 				{
 					std::cout << "You're already at full health" << std::endl;
-					
+
 					playerhealused = 1;
-					break;
 				}
-			 if (playerhealused == 0)
+				if (playerhealused == 1)
 				{
 					std::cout << "You can make another move" << std::endl;
 					break;
-					
 				}
-			else if (playerhealused == 1)
+				else if (playerhealused == 0)
 				{
 					playerhealth = playerhealth + (playerenergy / 2);
 					playerenergy = playerenergy / 2;
 					std::cout << "You healed" << std::endl;
 					std::cout << "You can make another move: " << std::endl;
 					playerhealused = 1;
+					playerturn = 0;
+					if (playerhealth > 100)
+					{
+						playerhealth = maxHealth;
+					}
 					break;
 				}
 				break;
@@ -227,10 +232,11 @@ int main()
 				Sleep(1000);
 				break;
 			}
+			break;
 		} while (playerturn == 0);
 		//enemy move
 
-		while (enemyturn == 0)
+		do
 		{
 			if (enemyhealth < 50)
 			{
@@ -305,17 +311,14 @@ int main()
 				{
 					enemyhealth = enemyhealth + (enemyenergy / 2);
 					enemyhealused = 1;
-					
-					
 				}
 				else if (enemyhealused == 1)
 				{
 					enemyhealused = 1;
 					enemyturn = 1;
-					
 				}
 			}
-		
+		} while (enemyturn == 0);
 
 		//action processing
 
@@ -394,26 +397,25 @@ int main()
 					}
 				}
 			}
-				
+
 			switch (enemymove)
 			{
 			case 3:
 				std::cout << "The enemy recharged their energy" << std::endl;
 				Sleep(1000);
-				enemyturn =0;				
+				enemyturn = 0;
 				break;
 			case 4:
 				std::cout << "The enemy dodged your attack" << std::endl;
 				Sleep(1000);
-				enemyturn =0;
+				enemyturn = 0;
 				break;
 			case 5:
 				std::cout << "The enemy healed for " << enemymaxhealth - enemyhealth << " health." << std::endl;
 				Sleep(1000);
-				enemyturn =0;
+				enemyturn = 0;
 				break;
 			}
-		
 
 		} while (enemyturn == 1);
 
@@ -433,8 +435,7 @@ int main()
 			std::cout << "You Killed the Enemy" << std::endl;
 			return 0;
 		}
-		}
-	
-}while (playerhealth > 0 && enemyhealth > 0);
-	
+	}
+
+	while (playerhealth > 0 && enemyhealth > 0);
 }
