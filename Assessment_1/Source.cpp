@@ -22,6 +22,7 @@ int playerhealthincrease = 0;
 bool playersecondturn = 0;
 int playermove;
 int playerenergydecrease;
+bool playerturn = 0;
 
 // enemy variables;
 int enemychancemodifier;
@@ -36,6 +37,7 @@ int enemymaxhealth = 100;
 int enemyhitchance;
 bool enemysecondturn = 0;
 int enemyenergydecrease;
+bool enemyturn = 0;
 
 //attack variables
 const int attackhitchance = 80;
@@ -143,16 +145,20 @@ int main()
 		{
 			enemyenergy = maxEnergy;
 		}
+		playerturn = 0;
+		enemyturn = 0;
 
 		//player move
 
-		do
+		
+		while (playerturn == 0)
 		{
 			switch (playermove)
 			{
 			case 1:
 
 				playerhealused = 0;
+				playerturn = 1;
 				break;
 
 			case 2:
@@ -163,12 +169,17 @@ int main()
 					std::cout << "Please choose another option" << std::endl;
 					Sleep(1000);
 					std::cin >> playermove;
+					playerturn = 1;
+					break;
 				}
-				else
+				else if (playerenergy >= 50)
 				{
 					playerenergy = playerenergy - 50;
+					playerturn = 1;
+					break;
 				}
 				playerhealused = 0;
+				playerturn = 1;
 				break;
 
 			case 3:
@@ -176,32 +187,42 @@ int main()
 				playerrechargerate = 4;
 				enemyhitchance = 10;
 				playerhealused = 0;
+				playerturn = 1;
 				break;
 			case 4:
 				std::cout << "You dodged the enemy's Attack" << std::endl;
 				enemychancemodifier = -30;
 				playerrechargerate = 0.5;
 				playerhealused = 0;
+				playerturn = 1;
 				break;
 
 			case 5:
 
-				if (playerhealused == 1)
+				if (playerhealth == 100)
+				{
+					std::cout << "You're already at full health" << std::endl;
+					playerhealused = 1;
+					break;
+				}
+				
+			if (playerhealused == 1)
 				{
 					std::cout << "You've already healed this turn" << std::endl;
 					Sleep(1000);
+					playerturn = 1;
+					
 				}
-				if (playersecondturn == 0)
+				else if (playerhealused == 0)
 				{
-					playersecondturn = 1;
 					playerhealth = playerhealth + (playerenergy / 2);
 					playerenergy = playerenergy / 2;
 					std::cout << "You healed" << std::endl;
-				}
-				else if (playersecondturn == 1)
-				{
+					std::cout << "You can make another move: " << std::endl;
 					playerhealused = 1;
+					
 				}
+
 				break;
 
 			default:
@@ -209,12 +230,10 @@ int main()
 				Sleep(1000);
 				break;
 			}
-			break;
-
-		} while (playersecondturn == 0);
+		} 
 		//enemy move
 
-		do
+		while (enemyturn == 0)
 		{
 			if (enemyhealth < 50)
 			{
@@ -264,30 +283,42 @@ int main()
 			switch (enemymove)
 			{
 			case 1:
+				enemyturn = 1;
+				break;
 
 			case 2:
+				enemyturn = 1;
+				break;
 
 			case 3:
 				enemyrechargerate = 4;
 				playerchancemodifier = 10;
+				enemyturn = 1;
+				break;
 
 			case 4:
 				playerchancemodifier = -30;
 				enemyrechargerate = 0.5;
+				enemyturn = 1;
+				break;
 
 			case 5:
 
-				if (enemysecondturn == 0)
+				if (enemyhealused == 0)
 				{
-					enemysecondturn = 1;
 					enemyhealth = enemyhealth + (enemyenergy / 2);
+					enemyhealused = 1;
+					
+					
 				}
-				else if (enemysecondturn == 1)
+				else if (enemyhealused == 1)
 				{
 					enemyhealused = 1;
+					enemyturn = 1;
+					
 				}
 			}
-		} while (enemyhealused == 0);
+		}
 
 		//action processing
 
@@ -302,14 +333,16 @@ int main()
 					std::cout << "You successfully hit the enemy" << std::endl;
 					enemyhealth -= ((rand() % 10) + 1);
 					Sleep(1000);
+					playerturn = 0;
 				}
 				else
 				{
 					std::cout << "You failed to hit the enemy" << std::endl;
 					Sleep(1000);
+					playerturn = 0;
 				}
 			}
-		else if (playermove == 2)
+			else if (playermove == 2)
 			{
 				playerhitchance = ((rand() % 100) + 1) + playerchancemodifier;
 				if (playerhitchance < sphitchance)
@@ -318,81 +351,90 @@ int main()
 					enemyhealth -= ((rand() % 5) + 16);
 					Sleep(1000);
 					playerenergy = playerenergy / 2;
+					playerturn = 0;
 				}
 				else
 				{
 					std::cout << "You failed to hit the enemy" << std::endl;
 					Sleep(1000);
+					playerturn = 0;
 				}
 			}
 			if (playermove == 3)
 			{
+				playerturn = 0;
 			}
 			if (playermove == 4)
 			{
+				playerturn = 0;
 			}
 			if (playermove == 5)
 			{
+				playerturn = 0;
 			}
-
-			//enemy move
+		} while (playerturn == 1);
+		//enemy move
+		do
+		{
 			if (enemymove == 1)
 			{
 				enemyhitchance = ((rand() % 100) + 1) + enemychancemodifier;
 				if (enemyhitchance < attackhitchance)
 				{
 					playerhealth -= ((rand() % 10) + 1);
+					std::cout << "The enemy used attack" << std::endl;
+					enemyturn = 0;
 				}
-			}
-		else if (enemymove == 2)
-			{
-				enemyhitchance = ((rand() % 100) + 1) + enemychancemodifier;
-				if (enemyhitchance < sphitchance)
+				else if (enemymove == 2)
 				{
-					playerhealth -= ((rand() % 5) + 16);
-					enemyenergy = enemyenergy / 2;
+					enemyhitchance = ((rand() % 100) + 1) + enemychancemodifier;
+					if (enemyhitchance < sphitchance)
+					{
+						playerhealth -= ((rand() % 5) + 16);
+						enemyenergy = enemyenergy / 2;
+						std::cout << "The enemy used special attack" << std::endl;
+						enemyturn = 0;
+					}
 				}
 			}
-
+				
 			switch (enemymove)
 			{
-			case 1:
-				std::cout << "The enemy used attack" << std::endl;
-				Sleep(1000);
-				break;
-			case 2:
-				std::cout << "The enemy used special attack" << std::endl;
-				Sleep(1000);
-				break;
 			case 3:
 				std::cout << "The enemy recharged their energy" << std::endl;
 				Sleep(1000);
+				enemyturn =0;				
 				break;
 			case 4:
 				std::cout << "The enemy dodged your attack" << std::endl;
 				Sleep(1000);
+				enemyturn =0;
 				break;
 			case 5:
 				std::cout << "The enemy healed for " << enemymaxhealth - enemyhealth << " health." << std::endl;
 				Sleep(1000);
+				enemyturn =0;
 				break;
 			}
+		
 
-			playerhealused = 0;
-			enemyhealused = 0;
+		} while (enemyturn == 1);
 
-			if (playerhealth == 0)
-			{
-				std::cout << "You Died" << std::endl;
-				Sleep(1000);
-				return 0;
-			}
-			else if (enemyhealth == 0)
-			{
-				std::cout << "You Killed the Enemy" << std::endl;
-				return 0;
-			}
-			
-			}while (playerhealth > 0 && enemyhealth > 0);
-	}while (playerhealth > 0 && enemyhealth > 0);
-}
+		playerhealused = 0;
+		enemyhealused = 0;
+		playerturn = 0;
+		enemyturn = 0;
+
+		if (playerhealth == 0)
+		{
+			std::cout << "You Died" << std::endl;
+			Sleep(1000);
+			return 0;
+		}
+		else if (enemyhealth == 0)
+		{
+			std::cout << "You Killed the Enemy" << std::endl;
+			return 0;
+		}
+	} while (playerhealth > 0 && enemyhealth > 0);
+	}
