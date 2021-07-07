@@ -105,8 +105,7 @@ int main()
 		{
 			return 0;
 		}
-
-	} while (gamestarted == 0);
+	}while (gamestarted == 0);
 
 	do
 	{
@@ -151,8 +150,8 @@ int main()
 		//player move
 
 		
-		while (playerturn == 0)
-		{
+		do {
+		
 			switch (playermove)
 			{
 			case 1:
@@ -202,27 +201,25 @@ int main()
 				if (playerhealth == 100)
 				{
 					std::cout << "You're already at full health" << std::endl;
+					
 					playerhealused = 1;
 					break;
 				}
-				
-			if (playerhealused == 1)
+			 if (playerhealused == 0)
 				{
-					std::cout << "You've already healed this turn" << std::endl;
-					Sleep(1000);
-					playerturn = 1;
+					std::cout << "You can make another move" << std::endl;
+					break;
 					
 				}
-				else if (playerhealused == 0)
+			else if (playerhealused == 1)
 				{
 					playerhealth = playerhealth + (playerenergy / 2);
 					playerenergy = playerenergy / 2;
 					std::cout << "You healed" << std::endl;
 					std::cout << "You can make another move: " << std::endl;
 					playerhealused = 1;
-					
+					break;
 				}
-
 				break;
 
 			default:
@@ -230,7 +227,7 @@ int main()
 				Sleep(1000);
 				break;
 			}
-		} 
+		} while (playerturn == 0);
 		//enemy move
 
 		while (enemyturn == 0)
@@ -318,7 +315,7 @@ int main()
 					
 				}
 			}
-		}
+		
 
 		//action processing
 
@@ -436,5 +433,8 @@ int main()
 			std::cout << "You Killed the Enemy" << std::endl;
 			return 0;
 		}
-	} while (playerhealth > 0 && enemyhealth > 0);
-	}
+		}
+	
+}while (playerhealth > 0 && enemyhealth > 0);
+	
+}
